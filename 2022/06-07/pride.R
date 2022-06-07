@@ -37,6 +37,7 @@ df <-
   summarize(sum = sum(Amount)) %>%
   mutate(perc = sum / total)
 
+
 title = "Are they 
     <span style='color:#FF0000;'>r</span><span style='color:#FFDB00;'>a</span><span style='color:#49FF00;'>i</span><span style='color:#00FF92;'>n</span><span style='color:#0092FF;'>b</span><span style='color:#4900FF;'>o</span><span style='color:#FF00DB;'>w</span>-<span style='color:#FF0000;'>w</span><span style='color:#FFDB00;'>a</span><span style='color:#49FF00;'>s</span><span style='color:#00FF92;'>h</span><span style='color:#0092FF;'>i</span><span style='color:#4900FF;'>n</span><span style='color:#FF00DB;'>g</span> you? "
 
@@ -47,10 +48,10 @@ df %>%
   geom_point(aes(x = -83, y = 40, fill = fct_rev(comp)), size=4, alpha = .8, shape = 21) +
   scale_fill_manual(values = c(rainbow(7), "black")) +
   scale_x_continuous(breaks = seq(2013, 2022, 1), limits = c(2013, 2022)) +
-  scale_y_continuous(breaks = seq(0, 1200000, 200000), labels = c("0k", "20k", "40k", "60k", "80k", "100k", "120k")) +
+  scale_y_continuous(breaks = seq(0, 1200000, 200000), labels = c("0k", "200k", "400k", "600k", "800k", "1M", "1.2M")) +
   labs(
     title = title,
-    subtitle = "In the last five years, many companies which sponsor prides across\nthe US increased their donations to anti-LGBTQ politicians.",
+    subtitle = "In the last five years, many companies that sponsor prides across\nthe US increased their donations to anti-LGBTQ politicians.",
     caption = "Author: Francesco Olivo\nData: Data For Progress",
     x = "",
     y = "Dollars donated to anti-LGBTQ politicians"
@@ -66,6 +67,7 @@ df %>%
     plot.margin = margin(10, 15, 10, 10),
     panel.grid.major.x = element_blank(),
     axis.text = element_text(color = "gray10"),
+    axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
     legend.position = "top",
     legend.title = element_blank(),
     legend.text = element_text(size = 8)
