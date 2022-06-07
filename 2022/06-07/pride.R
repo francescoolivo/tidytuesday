@@ -50,10 +50,10 @@ df %>%
   scale_y_continuous(breaks = seq(0, 1200000, 200000), labels = c("0k", "20k", "40k", "60k", "80k", "100k", "120k")) +
   labs(
     title = title,
-    subtitle = "In the last five years, donations from companies that sponsor both prides\nand anti-LGBTQ politicians have grown drastically.",
+    subtitle = "In the last five years, many companies which sponsor prides across\nthe US increased their donations to anti-LGBTQ politicians.",
     caption = "Author: Francesco Olivo\nData: Data For Progress",
     x = "",
-    y = ""
+    y = "Dollars donated to anti-LGBTQ politicians"
   ) +
   theme_minimal(base_size=9, base_family="Consolas") +
   theme(
