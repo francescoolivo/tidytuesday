@@ -3,7 +3,7 @@ library(tidyr)
 library(ggplot2)
 library(lubridate)
 library(forcats)
-library(ggstream)
+library(ggchicklet)
 library(scales)
 library(prismatic)
 library(ggtext)
@@ -22,8 +22,9 @@ ranking <-
     mutate(
          rank = rank(-total, ties.method = "max"),
          comp = if_else(rank <= 7, Company, "Others"),
-         comp = factor(comp, levels = c("Others", "Toyota", "State Farm", "Southern Company (Georgia Power, Alabama Power, Mississippi Power)", "FedEx", "Comcast", "AT&T", "Amazon"),
-                       labels = c("Others", "Toyota", "State Farm", "Southern Company", "FedEx", "Comcast", "AT&T", "Amazon"))) %>%
+         comp = factor(comp,
+                       levels = c("Amazon", "AT&T", "Comcast", "FedEx", "Southern Company (Georgia Power, Alabama Power, Mississippi Power)", "State Farm", "Toyota", "Others"),
+                       labels = c("Amazon", "AT&T", "Comcast", "FedEx", "Southern Company", "State Farm", "Toyota", "Others"))) %>%
     arrange(rank)
 
 df <-
@@ -31,11 +32,8 @@ df <-
   filter(`Pride?` == TRUE, !is.na(Date)) %>%
   inner_join(ranking, by = "Company") %>%
   mutate(year = year(Date)) %>%
-  group_by(year) %>%
-  mutate(total = sum(Amount)) %>%
-  group_by(comp, year, total) %>%
-  summarize(sum = sum(Amount)) %>%
-  mutate(perc = sum / total)
+  group_by(comp, year) %>%
+  summarize(sum = sum(Amount))
 
 
 title = "Are they 
@@ -43,12 +41,13 @@ title = "Are they
 
 df %>%
   ggplot(aes(x = year, y = sum, fill = fct_rev(comp))) +
-  geom_stream(aes(color = after_scale(clr_darken(fill, 0.5))), type = 'ridge', alpha = .75, show.legend = FALSE) +
-  #legend
-  geom_point(aes(x = -83, y = 40, fill = fct_rev(comp)), size=4, alpha = .8, shape = 21) +
-  scale_fill_manual(values = c(rainbow(7), "black")) +
+  geom_chicklet(aes(color = after_scale(clr_darken(fill, 0.5))), alpha = .75, show.legend = FALSE) +
+  geom_point(aes(x = -83, y = 40, fill = comp), size=4, alpha = .8, shape = 21) +
+  scale_fill_manual(values = c("black", rev(rainbow(7)), "black")) +
   scale_x_continuous(breaks = seq(2013, 2022, 1), limits = c(2013, 2022)) +
-  scale_y_continuous(breaks = seq(0, 1200000, 200000), labels = c("0k", "200k", "400k", "600k", "800k", "1M", "1.2M")) +
+  scale_y_continuous(breaks = seq(0, 600000, 100000), 
+                     labels = c("0", "100K", "200K", "300K", "400K", "500K", "600K")
+                     ) +
   labs(
     title = title,
     subtitle = "In the last five years, many companies that sponsor prides across\nthe US increased their donations to anti-LGBTQ politicians.",
@@ -72,7 +71,6 @@ df %>%
     legend.title = element_blank(),
     legend.text = element_text(size = 8)
   ) +
-  guides(fill=guide_legend(nrow = 2, byrow = FALSE))
+  guides(fill=guide_legend(nrow = 2, byrow = FALSE, reverse = TRUE))
 
 ggsave("2022/06-07/rainbow-washing.png", w = 6, h = 6, dpi = 300)
-
